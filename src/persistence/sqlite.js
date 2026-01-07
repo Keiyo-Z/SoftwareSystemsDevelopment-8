@@ -52,19 +52,20 @@ async function getItems() {
     });
 }
 
-async function updateItem(id, item) {
+async function getItem(id) {
     return new Promise((acc, rej) => {
-        db.run(
-          'UPDATE todo_items SET name=?, completed = 1 - completed WHERE id = ?',
-          [item.name, id],
-          err => {
+        db.all('SELECT * FROM todo_items WHERE id=?', [id], (err, rows) => {
             if (err) return rej(err);
-            acc();
-          },
-        );
+            acc(
+                rows.map(item =>
+                    Object.assign({}, item, {
+                        completed: item.completed === 1,
+                    }),
+                )[0],
+            );
+        });
     });
 }
-
 
 async function storeItem(item) {
     return new Promise((acc, rej) => {
@@ -78,19 +79,6 @@ async function storeItem(item) {
         );
     });
 }
-
-async function updateItem(id, item) {
-    return new Promise((acc, rej) => {
-        db.run(
-            'UPDATE todo_items SET name=?, completed = 1 - completed WHERE id = ?',
-            [item.name, id],
-            err => {
-                if (err) return rej(err);
-                acc();
-            },
-        );
-    });
-} 
 
 async function removeItem(id) {
     return new Promise((acc, rej) => {
