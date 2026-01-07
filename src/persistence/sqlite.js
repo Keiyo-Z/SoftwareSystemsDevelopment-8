@@ -82,8 +82,8 @@ async function storeItem(item) {
 async function updateItem(id, item) {
     return new Promise((acc, rej) => {
         db.run(
-            'UPDATE todo_items SET name=?, completed=? WHERE id = ?',
-            [item.name, item.completed ? 1 : 0, id],
+            'UPDATE todo_items SET name=?, completed = 1 - completed WHERE id = ?',
+            [item.name, id],
             err => {
                 if (err) return rej(err);
                 acc();
