@@ -80,6 +80,20 @@ async function storeItem(item) {
     });
 }
 
+async function updateItem(id, item) {
+    return new Promise((acc, rej) => {
+        db.run(
+            'UPDATE todo_items SET name=?, completed = 1 - completed WHERE id = ?',
+            [item.name, id],
+            err => {
+                if (err) return rej(err);
+                acc();
+            },
+        );
+    });
+}
+
+
 async function removeItem(id) {
     return new Promise((acc, rej) => {
         db.run('DELETE FROM todo_items WHERE id = ?', [id], err => {
